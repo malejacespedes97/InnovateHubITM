@@ -1,0 +1,33 @@
+﻿@page "/cursos/create"
+@using InnovateHubITM.Shared.Entities;
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+<h3>Crear País</h3>
+
+<CursoForm @ref="cursoForm" Curso="curso" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    private Curso curso = new();
+
+    private CursoForm? cursoForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.Post("/api/cursos", curso);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message);
+            return;
+        }
+        cursoForm!.FormPostedSuccessfully = true;
+        navigationManager.NavigateTo("/cursos");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/cursos");
+    }
+}
