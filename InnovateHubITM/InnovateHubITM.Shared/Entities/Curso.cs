@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,6 +9,7 @@ namespace InnovateHubITM.Shared.Entities
 {
     public class Curso
     {
+
         public int Id { get; set; }
 
         [Display(Name = "Nombre del curso")]
@@ -32,6 +33,10 @@ namespace InnovateHubITM.Shared.Entities
         public string Precio { get; set; } = null!;
 
         public ICollection<Inscripcion> Inscripciones { get; set; } = null!;
+
+        public ICollection<Comentario> Comentarios { get; set; } = null!;
+
+        public ICollection<Modulo> Modulos { get; set; } = null!;
 
     }
 }

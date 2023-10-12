@@ -18,12 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\InnovateHubITM.Shared\InnovateHubITM.Shared.csproj" />
-    <ProjectReference Include="..\InnovateHubITM.WEB\InnovateHubITM.WEB.csproj" />
   </ItemGroup>
 
 </Project>
