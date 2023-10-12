@@ -1,14 +1,15 @@
-﻿@using InnovateHubITM.Shared.Entities;
+﻿
+@using InnovateHubITM.Shared.Entities;
 @inject SweetAlertService swal
 
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
 <EditForm EditContext="editContext" OnSubmit="OnSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label>Curso:</label>
+        <label>Estudiante:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Curso.Nombre" />
-            <ValidationMessage For="@(() => Curso.Nombre)" />
+            <InputText class="form-control" @bind-Value="@Estudiante.Nombre" />
+            <ValidationMessage For="@(() => Estudiante.Nombre)" />
         </div>
     </div>
 
@@ -23,14 +24,14 @@
 
     protected override void OnInitialized()
     {
-        editContext = new(Curso);
+        editContext = new(Estudiante);
 
     }
 
 
     [EditorRequired]
     [Parameter]
-    public Curso Curso { get; set; } = null!;
+    public Estudiante Estudiante { get; set; } = null!;
 
     [EditorRequired]
     [Parameter]

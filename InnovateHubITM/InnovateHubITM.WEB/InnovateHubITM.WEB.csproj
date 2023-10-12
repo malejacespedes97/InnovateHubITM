@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\Inscripciones\" />
-    <Folder Include="Pages\Estudiantes\" />
   </ItemGroup>
 
   <ItemGroup>
