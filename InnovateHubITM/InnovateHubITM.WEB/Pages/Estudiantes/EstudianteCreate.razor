@@ -1,0 +1,33 @@
+﻿@page "/estudiantes/create"
+@using InnovateHubITM.Shared.Entities;
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+<h3>Crear Estudiante</h3>
+
+<EstudianteForm @ref="estudianteForm" Estudiante="estudiante" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    private Estudiante estudiante = new();
+
+    private EstudianteForm? estudianteForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.Post("/api/estudiantes", estudiante);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message);
+            return;
+        }
+        estudianteForm!.FormPostedSuccessfully = true;
+        navigationManager.NavigateTo("/estudiantes");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/estudiantes");
+    }
+}
