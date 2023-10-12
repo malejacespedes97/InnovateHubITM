@@ -17,12 +17,11 @@ namespace InnovateHubITM.API.Data
         public DbSet<Modulo> Modulos { get; set; }
         public DbSet<Profesor> Profesores { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-
-
         }
     }
 }
+
