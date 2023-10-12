@@ -8,5 +8,8 @@ namespace InnovateHubITM.Shared.Entities
 {
     public class Curso
     {
+        public ICollection<Comentario> Comentarios { get; set; } = null!;
+
+        public ICollection<Modulo> Modulos { get; set; } = null!;
     }
 }
