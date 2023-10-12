@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Inscripciones\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\InnovateHubITM.Shared\InnovateHubITM.Shared.csproj" />
   </ItemGroup>
 
