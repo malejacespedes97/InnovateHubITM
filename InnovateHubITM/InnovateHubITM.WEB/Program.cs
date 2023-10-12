@@ -1,3 +1,4 @@
+using CurrieTechnologies.Razor.SweetAlert2;
 using InnovateHubITM.WEB;
 using InnovateHubITM.WEB.Repositories;
 using Microsoft.AspNetCore.Components.Web;
@@ -15,5 +16,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 
 //inyección del Repository
 builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddSweetAlert2();
+
 
 await builder.Build().RunAsync();
