@@ -13,6 +13,9 @@ namespace InnovateHubITM.API.Data
         public DbSet<Curso> Cursos { get; set; }
         public DbSet<Estudiante> Estudiantes { get; set; }
         public DbSet<Inscripcion> Inscripciones { get; set; }
+        public DbSet<Comentario> Comentarios { get; set; }
+        public DbSet<Modulo> Modulos { get; set; }
+        public DbSet<Profesor> Profesores { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
