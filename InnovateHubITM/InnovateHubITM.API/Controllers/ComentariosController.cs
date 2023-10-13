@@ -42,6 +42,33 @@ namespace InnovateHubITM.API.Controllers
             await _context.SaveChangesAsync();
             return Ok(comentario);
         }
+
+        // Put-- update
+        [HttpPut]
+        public async Task<ActionResult> Put(Comentario comentario)
+        {
+
+            _context.Update(comentario);
+            await _context.SaveChangesAsync();
+            return Ok(comentario);
+        }
+
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+
+            var filaafectada = await _context.Comentarios
+                .Where(x => x.Id == id)
+                .ExecuteDeleteAsync();
+
+            if (filaafectada == 0)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
     }
 }
 
