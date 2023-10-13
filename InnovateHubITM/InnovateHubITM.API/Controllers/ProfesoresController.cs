@@ -41,5 +41,32 @@ namespace ProyectoInvestigacion.API.Controllers
             await _context.SaveChangesAsync();
             return Ok(profesor);
         }
+
+        // Put-- update
+        [HttpPut]
+        public async Task<ActionResult> Put(Profesor profesor)
+        {
+
+            _context.Update(profesor);
+            await _context.SaveChangesAsync();
+            return Ok(profesor);
+        }
+
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+
+            var filaafectada = await _context.Profesores
+                .Where(x => x.Id == id)
+                .ExecuteDeleteAsync();
+
+            if (filaafectada == 0)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
     }
 }
