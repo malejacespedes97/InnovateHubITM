@@ -1,5 +1,4 @@
-﻿@page "/cursos/form"
-
+﻿@page "/profesores/form"
 @using InnovateHubITM.Shared.Entities
 @inject SweetAlertService swal
 @inject NavigationManager navigationManager
@@ -10,30 +9,25 @@
 <EditForm EditContext="editContext" OnSubmit="HandleSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label>ID Curso:</label>
+        <label>ID Profesor:</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@Curso.Id" />
-            <ValidationMessage For="@(() => Curso.Id)" />
+            <InputNumber class="form-control" @bind-Value="@Profesor.Id" />
+            <ValidationMessage For="@(() => Profesor.Id)" />
         </div>
-        <label>Nombre del Curso:</label>
+        <label>Nombre del Profesor:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Curso.Nombre" />
-            <ValidationMessage For="@(() => Curso.Nombre)" />
+            <InputText class="form-control" @bind-Value="@Profesor.Nombre" />
+            <ValidationMessage For="@(() => Profesor.Nombre)" />
         </div>
-        <label>Descripción del Curso:</label>
+        <label>Apellidos del Profesor:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Curso.Descripcion" />
-            <ValidationMessage For="@(() => Curso.Descripcion)" />
+            <InputText class="form-control" @bind-Value="@Profesor.Apellidos" />
+            <ValidationMessage For="@(() => Profesor.Apellidos)" />
         </div>
-        <label>Duración del Curso:</label>
+        <label>Correo del Profesor:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Curso.Duracion" />
-            <ValidationMessage For="@(() => Curso.Duracion)" />
-        </div>
-        <label>Precio del Curso:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@Curso.Precio" />
-            <ValidationMessage For="@(() => Curso.Precio)" />
+            <InputText class="form-control" @bind-Value="@Profesor.Correo" />
+            <ValidationMessage For="@(() => Profesor.Correo)" />
         </div>
     </div>
 
@@ -46,12 +40,12 @@
 
     protected override void OnInitialized()
     {
-        editContext = new(Curso);
+        editContext = new(Profesor);
     }
 
     [EditorRequired]
     [Parameter]
-    public Curso Curso { get; set; } = null!;
+    public Profesor Profesor { get; set; } = null!;
 
     [EditorRequired]
     [Parameter]
@@ -65,7 +59,7 @@
 
     private async Task HandleSubmit()
     {
-        var responseHttp = await repository.Post("api/Cursos", Curso);
+        var responseHttp = await repository.Post("api/Profesores", Profesor);
 
         if (responseHttp.Error)
         {
@@ -76,7 +70,7 @@
         {
             FormPostedSuccessfully = true;
             await swal.FireAsync("Éxito", "La información se ha guardado correctamente", SweetAlertIcon.Success);
-            navigationManager.NavigateTo("/cursos");
+            navigationManager.NavigateTo("/profesores");
         }
     }
 

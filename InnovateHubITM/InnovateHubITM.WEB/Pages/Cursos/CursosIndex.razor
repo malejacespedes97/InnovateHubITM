@@ -20,30 +20,29 @@
             <thead>
                 <tr>
                     <th>Curso</th>
+                    <th>Descripción</th>
+                    <th>Duración</th>
+                    <th>Precio</th>
                     <th></th>
-
                 </tr>
             </thead>
             <tbody>
                 @foreach (var curso in Cursos!)
                 {
                     <tr>
-                        <td>
-                            @curso.Nombre
-                        </td>
+                        <td>@curso.Nombre</td>
+                        <td>@curso.Descripcion</td>
+                        <td>@curso.Duracion</td>
+                        <td>@curso.Precio</td>
                         <td>
                             <a href="/cursos/edit/@curso.Id" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick=@(() => Delete(curso))>Borrar</button>
-
                         </td>
-
                     </tr>
                 }
             </tbody>
         </table>
-
     </Body>
-
 </GenericList>
 
 @code {
@@ -51,13 +50,15 @@
 
     protected async override Task OnInitializedAsync()
     {
+        var responseHttp = await repository.Get<List<Curso>>("/api/Cursos");
+        Cursos = responseHttp.Response!;
         await Load();
     }
 
     private async Task Load()
     {
-        var responseHppt = await repository.Get<List<Curso>>("api/cursos");
-        Cursos = responseHppt.Response!;
+        var responseHttp = await repository.Get<List<Curso>>("/api/Cursos");
+        Cursos = responseHttp.Response!;
     }
 
     private async Task Delete(Curso curso)
@@ -65,7 +66,7 @@
         var result = await swal.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = "¿Esta seguro que quieres borrar el registro?",
+                Text = "¿Estás seguro de que quieres borrar el curso?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true
             });
@@ -77,18 +78,18 @@
             return;
         }
 
-        var responseHTTP = await repository.Delete($"api/curso/{curso.Id}");
+        var responseHttp = await repository.Delete($"/api/Cursos/{curso.Id}");
 
-        if (responseHTTP.Error)
+        if (responseHttp.Error)
         {
-            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 navigationManager.NavigateTo("/");
             }
             else
             {
-                var mensajeError = await responseHTTP.GetErrorMessageAsync();
-                await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+                var errorMessage = await responseHttp.GetErrorMessageAsync();
+                await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
             }
         }
         else
@@ -96,5 +97,4 @@
             await Load();
         }
     }
-
 }

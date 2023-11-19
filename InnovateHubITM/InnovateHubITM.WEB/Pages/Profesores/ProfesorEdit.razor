@@ -1,12 +1,12 @@
-﻿@page "/cursos/edit/{Id:int}"
-@using InnovateHubITM.Shared.Entities;
+﻿@page "/profesores/edit/{Id:int}"
+@using InnovateHubITM.Shared.Entities
 @inject NavigationManager navigationManager
 @inject IRepository repository
 @inject SweetAlertService swal
 
-<h3>Editar Curso</h3>
+<h3>Editar Profesor</h3>
 
-@if (curso is null)
+@if (profesor is null)
 {
     <div class="align-items-center">
         <img src=" https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700 " />
@@ -14,25 +14,25 @@
 }
 else
 {
-    <CursoForm @ref="cursoForm" Curso="curso" OnSubmit="Edit" ReturnAction="Return" />
+    <ProfesorForm @ref="profesorForm" Profesor="profesor" OnSubmit="Edit" ReturnAction="Return" />
 }
 
 @code {
-    private Curso? curso;
-    private CursoForm? cursoForm;
+    private Profesor? profesor;
+    private ProfesorForm? profesorForm;
 
     [Parameter]
     public int Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var responseHTTP = await repository.Get<Curso>($"api/Cursos/{Id}");
+        var responseHTTP = await repository.Get<Profesor>($"api/profesores/{Id}");
 
         if (responseHTTP.Error)
         {
             if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                navigationManager.NavigateTo("cursos");
+                navigationManager.NavigateTo("profesores");
             }
             else
             {
@@ -42,13 +42,13 @@ else
         }
         else
         {
-            curso = responseHTTP.Response;
+            profesor = responseHTTP.Response;
         }
     }
 
     private async Task Edit()
     {
-        var responseHTTP = await repository.Put("api/Cursos", curso);
+        var responseHTTP = await repository.Put("api/profesores", profesor);
 
         if (responseHTTP.Error)
         {
@@ -57,13 +57,13 @@ else
         }
         else
         {
-            cursoForm!.FormPostedSuccessfully = true;
-            navigationManager.NavigateTo("cursos");
+            profesorForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("profesores");
         }
     }
 
     private void Return()
     {
-        navigationManager.NavigateTo("cursos");
+        navigationManager.NavigateTo("profesores");
     }
 }
