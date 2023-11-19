@@ -1,0 +1,73 @@
+﻿@page "/modulos/edit/{Id:int}"
+@using InnovateHubITM.Shared.Entities
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+
+<h3>Editar Módulo</h3>
+
+@if (modulo is null)
+{
+    <div class="align-items-center">
+        <img src="https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700" />
+    </div>
+}
+else
+{
+    <ModuloForm @ref="moduloForm" Modulo="modulo" Cursos="cursos" OnSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private Modulo? modulo;
+    private List<Curso> cursos = new();
+    private ModuloForm? moduloForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await repository.Get<Modulo>($"api/modulos/{Id}");
+
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("modulos");
+            }
+            else
+            {
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await swal.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            modulo = responseHttp.Response;
+        }
+
+        var responseHttpCursos = await repository.Get<List<Curso>>("/api/cursos");
+        cursos = responseHttpCursos.Response!;
+    }
+
+    private async Task Edit()
+    {
+        var responseHttp = await repository.Put("api/modulos", modulo);
+
+        if (responseHttp.Error)
+        {
+            var mensajeError = await responseHttp.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            moduloForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("modulos");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("modulos");
+    }
+}
