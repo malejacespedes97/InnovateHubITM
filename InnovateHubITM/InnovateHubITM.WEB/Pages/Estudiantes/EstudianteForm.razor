@@ -1,15 +1,33 @@
-﻿
-@using InnovateHubITM.Shared.Entities;
+﻿@page "/estudiantes/form"
+@using InnovateHubITM.Shared.Entities
 @inject SweetAlertService swal
+@inject NavigationManager navigationManager
+@inject IRepository repository
 
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
-<EditForm EditContext="editContext" OnSubmit="OnSubmit">
+
+<EditForm EditContext="editContext" OnSubmit="HandleSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label>Estudiante:</label>
+        <label>ID Estudiante:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Estudiante.Id" />
+            <ValidationMessage For="@(() => Estudiante.Id)" />
+        </div>
+        <label>Nombre del Estudiante:</label>
         <div>
             <InputText class="form-control" @bind-Value="@Estudiante.Nombre" />
             <ValidationMessage For="@(() => Estudiante.Nombre)" />
+        </div>
+        <label>Apellidos del Estudiante:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Estudiante.Apellidos" />
+            <ValidationMessage For="@(() => Estudiante.Apellidos)" />
+        </div>
+        <label>Correo del Estudiante:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Estudiante.Correo" />
+            <ValidationMessage For="@(() => Estudiante.Correo)" />
         </div>
     </div>
 
@@ -18,16 +36,12 @@
 </EditForm>
 
 @code {
-
-
     private EditContext editContext = null!;
 
     protected override void OnInitialized()
     {
         editContext = new(Estudiante);
-
     }
-
 
     [EditorRequired]
     [Parameter]
@@ -42,6 +56,23 @@
     public EventCallback ReturnAction { get; set; }
 
     public bool FormPostedSuccessfully { get; set; } = false;
+
+    private async Task HandleSubmit()
+    {
+        var responseHttp = await repository.Post("api/Estudiantes", Estudiante);
+
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessageAsync();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+        }
+        else
+        {
+            FormPostedSuccessfully = true;
+            await swal.FireAsync("Éxito", "La información se ha guardado correctamente", SweetAlertIcon.Success);
+            navigationManager.NavigateTo("/estudiantes");
+        }
+    }
 
     private async Task OnBeforeInternalNavigation(LocationChangingContext context)
     {
@@ -75,10 +106,3 @@
         context.PreventNavigation();
     }
 }
-
-
-
-
-
-
-
