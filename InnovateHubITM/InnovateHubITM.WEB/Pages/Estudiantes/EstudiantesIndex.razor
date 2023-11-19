@@ -1,11 +1,8 @@
 ﻿@page "/estudiantes"
-@using InnovateHubITM.Shared.Entities;
-@using InnovateHubITM.WEB.Repositories;
-
+@using InnovateHubITM.Shared.Entities
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService swal
-
 
 <h3>Estudiantes</h3>
 
@@ -19,31 +16,28 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Estudiante</th>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Correo</th>
                     <th></th>
-
                 </tr>
             </thead>
             <tbody>
                 @foreach (var estudiante in Estudiantes!)
                 {
                     <tr>
+                        <td>@estudiante.Nombre</td>
+                        <td>@estudiante.Apellidos</td>
+                        <td>@estudiante.Correo</td>
                         <td>
-                            @estudiante.Nombre
-                        </td>
-                        <td>
-                            <a href="/cursos/edit/@estudiante.Id" class="btn btn-warning">Editar</a>
+                            <a href="/estudiantes/edit/@estudiante.Id" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick=@(() => Delete(estudiante))>Borrar</button>
-
                         </td>
-
                     </tr>
                 }
             </tbody>
         </table>
-
     </Body>
-
 </GenericList>
 
 @code {
@@ -51,13 +45,8 @@
 
     protected async override Task OnInitializedAsync()
     {
-        await Load();
-    }
-
-    private async Task Load()
-    {
-        var responseHppt = await repository.Get<List<Estudiante>>("api/estudiantes");
-        Estudiantes = responseHppt.Response!;
+        var responseHttp = await repository.Get<List<Estudiante>>("/api/Estudiantes");
+        Estudiantes = responseHttp.Response!;
     }
 
     private async Task Delete(Estudiante estudiante)
@@ -65,7 +54,7 @@
         var result = await swal.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = "¿Esta seguro que quieres borrar el registro?",
+                Text = "¿Estás seguro de que quieres borrar el estudiante?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true
             });
@@ -77,19 +66,12 @@
             return;
         }
 
-        var responseHTTP = await repository.Delete($"api/curso/{estudiante.Id}");
+        var responseHttp = await repository.Delete($"/api/Estudiantes/{estudiante.Id}");
 
-        if (responseHTTP.Error)
+        if (responseHttp.Error)
         {
-            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                navigationManager.NavigateTo("/");
-            }
-            else
-            {
-                var mensajeError = await responseHTTP.GetErrorMessageAsync();
-                await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
-            }
+            var errorMessage = await responseHttp.GetErrorMessageAsync();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
         }
         else
         {
@@ -97,4 +79,9 @@
         }
     }
 
+    private async Task Load()
+    {
+        var responseHttp = await repository.Get<List<Estudiante>>("/api/Estudiantes");
+        Estudiantes = responseHttp.Response!;
+    }
 }

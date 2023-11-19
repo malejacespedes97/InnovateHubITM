@@ -1,0 +1,33 @@
+﻿@page "/profesores/create"
+@using InnovateHubITM.Shared.Entities
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+<h3>Crear Profesor</h3>
+
+<ProfesorForm @ref="profesorForm" Profesor="profesor" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    private Profesor profesor = new();
+
+    private ProfesorForm? profesorForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.Post("/api/profesores", profesor);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message);
+            return;
+        }
+        profesorForm!.FormPostedSuccessfully = true;
+        navigationManager.NavigateTo("/profesores");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/profesores");
+    }
+}
