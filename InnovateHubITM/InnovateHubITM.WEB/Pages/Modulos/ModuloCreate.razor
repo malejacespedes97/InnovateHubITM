@@ -1,0 +1,40 @@
+﻿@page "/modulos/create"
+@using InnovateHubITM.Shared.Entities
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+<h3>Crear Módulo</h3>
+
+<ModuloForm @ref="moduloForm" Modulo="modulo" Cursos="cursos" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    private Modulo modulo = new();
+    private List<Curso> cursos = new();
+
+    private ModuloForm? moduloForm;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttpCursos = await repository.Get<List<Curso>>("/api/cursos");
+        cursos = responseHttpCursos.Response!;
+    }
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.Post("/api/modulos", modulo);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message);
+            return;
+        }
+        moduloForm!.FormPostedSuccessfully = true;
+        navigationManager.NavigateTo("/modulos");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/modulos");
+    }
+}
