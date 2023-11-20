@@ -1,0 +1,33 @@
+﻿@page "/inscripciones/create"
+@using InnovateHubITM.Shared.Entities
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+<h3>Crear Inscripción</h3>
+
+<InscripcionForm @ref="inscripcionForm" Inscripcion="inscripcion" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    private Inscripcion inscripcion = new();
+
+    private InscripcionForm? inscripcionForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.Post("/api/inscripciones", inscripcion);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message);
+            return;
+        }
+        inscripcionForm!.FormPostedSuccessfully = true;
+        navigationManager.NavigateTo("/inscripciones");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/inscripciones");
+    }
+}
